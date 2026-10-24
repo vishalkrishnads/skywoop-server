@@ -1,0 +1,45 @@
+name: ci
+
+on:
+  push:
+    branches: [main, dev]
+  pull_request:
+
+env:
+  CARGO_TERM_COLOR: always
+  SQLX_OFFLINE: "true"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:18
+        env:
+          POSTGRES_USER: skywoop
+          POSTGRES_PASSWORD: skywoop
+          POSTGRES_DB: skywoop
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U skywoop -d skywoop"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      DATABASE_URL: postgres://skywoop:skywoop@localhost:5432/skywoop
+      APP_ENV: local
+      AUTH_MODE: dev_token
+      DEV_TOKEN: ci-dev-token
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+      - uses: Swatinem/rust-cache@v2
+      - name: rustfmt
+        run: cargo fmt --all -- --check
+      - name: clippy
+        run: cargo clippy --all-targets -- -D warnings
+      - name: test
+        run: cargo test

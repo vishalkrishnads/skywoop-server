@@ -1,0 +1,54 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "environmentName": {
+      "value": "${AZURE_ENV_NAME}"
+    },
+    "location": {
+      "value": "${AZURE_LOCATION}"
+    },
+    "postgresAdminObjectId": {
+      "value": "${POSTGRES_ADMIN_OBJECT_ID}"
+    },
+    "postgresAdminPrincipalName": {
+      "value": "${POSTGRES_ADMIN_PRINCIPAL_NAME}"
+    },
+    "postgresAdminPrincipalType": {
+      "value": "${POSTGRES_ADMIN_PRINCIPAL_TYPE=User}"
+    },
+    "deployOpenaiModels": {
+      "value": "${DEPLOY_OPENAI_MODELS=false}"
+    },
+    "publicBaseUrl": {
+      "value": "${PUBLIC_BASE_URL=https://api.skywoop.com}"
+    },
+    "appOrigin": {
+      "value": "${APP_ORIGIN=https://skywoop.com}"
+    },
+    "authJwksUrl": {
+      "value": "${AUTH_JWKS_URL=https://skywoop.com/api/auth/jwks}"
+    },
+    "authIssuer": {
+      "value": "${AUTH_ISSUER=https://skywoop.com}"
+    },
+    "authAudience": {
+      "value": "${AUTH_AUDIENCE=skywoop-api}"
+    },
+    "blobCorsOrigins": {
+      "value": ["http://localhost:3000", "https://skywoop.com"]
+    },
+    "containerImageTag": {
+      "value": "${CONTAINER_IMAGE_TAG=latest}"
+    },
+    "nameSalt": {
+      "value": "${AZURE_NAME_SALT=cus}"
+    },
+    "postgresClientIp": {
+      "value": "${POSTGRES_CLIENT_IP=}"
+    },
+    "azureOpenaiBase": {
+      "value": "${AZURE_OPENAI_BASE=https://grower-2.openai.azure.com/openai/v1}"
+    }
+  }
+}

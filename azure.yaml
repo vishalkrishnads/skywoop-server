@@ -1,0 +1,25 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/Azure/azure-dev/main/schemas/v1.0/azure.yaml.json
+name: skywoop
+metadata:
+  template: skywoop@0.0.1
+services:
+  api:
+    project: .
+    # azd has no Rust framework service. The image is built from the Dockerfile.
+    language: docker
+    host: containerapp
+    docker:
+      path: ./Dockerfile
+      context: .
+hooks:
+  postprovision:
+    posix:
+      shell: sh
+      run: bash ./infra/postprovision.sh
+      interactive: false
+      continueOnError: false
+    windows:
+      shell: pwsh
+      run: bash ./infra/postprovision.sh
+      interactive: false
+      continueOnError: false

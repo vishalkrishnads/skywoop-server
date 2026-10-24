@@ -1,1 +1,11 @@
 /target
+.env
+.data/
+.DS_Store
+*.pem
+*.p8
+.sqlx/
+!/.sqlx/.gitkeep
+
+assets/devices/*.png
+assets/devices/*.jpg

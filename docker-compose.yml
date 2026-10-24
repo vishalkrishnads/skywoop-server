@@ -1,0 +1,20 @@
+services:
+  postgres:
+    image: postgres:18
+    environment:
+      POSTGRES_USER: skywoop
+      POSTGRES_PASSWORD: skywoop
+      POSTGRES_DB: skywoop
+    ports:
+      - "5432:5432"
+    volumes:
+      # Postgres 18+ images expect the mount at /var/lib/postgresql (not .../data).
+      - skywoop_pg:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U skywoop -d skywoop"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  skywoop_pg:

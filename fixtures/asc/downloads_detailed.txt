@@ -1,0 +1,6 @@
+Date	Download Type	Campaign	Source Info	Counts
+2024-01-15	First-time download	tok_abc	Instagram	5
+2024-01-15	Redownload	tok_abc	Instagram	2
+2024-01-15	First-time download		Instagram	20
+2024-01-15	Redownload		Facebook	3
+2024-01-16	First-time download	tok_abc	Instagram	1

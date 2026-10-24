@@ -1,0 +1,8 @@
+Date	Event	Campaign	Source Info	Counts
+2024-01-15	Impression	tok_abc	Instagram	100
+2024-01-15	Page View	tok_abc	Instagram	50
+2024-01-15	Tap	tok_abc	Instagram	10
+2024-01-15	Impression		Instagram	200
+2024-01-15	Page View		Instagram	80
+2024-01-16	Impression	tok_abc	Instagram	40
+2024-01-16	Impression	tok_xyz	Facebook	25
