@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:ht="https://trends.google.com/trending/rss" version="2.0">
+  <channel>
+    <title>Daily Search Trends</title>
+    <link>https://trends.google.com/trending?geo=US</link>
+    <item>
+      <title>Super Bowl halftime show</title>
+      <ht:approx_traffic>500K+</ht:approx_traffic>
+      <description>Super Bowl halftime show</description>
+      <pubDate>Wed, 07 Oct 2026 10:00:00 -0700</pubDate>
+      <ht:picture>https://t0.gstatic.com/images?q=tbn:abc</ht:picture>
+      <ht:news_item>
+        <ht:news_item_title>Halftime performer announced &amp; fans react</ht:news_item_title>
+        <ht:news_item_url>https://news.example.com/halftime</ht:news_item_url>
+        <ht:news_item_source>Example News</ht:news_item_source>
+      </ht:news_item>
+      <ht:news_item>
+        <ht:news_item_title>What to expect at the show</ht:news_item_title>
+        <ht:news_item_url>https://sports.example.com/expect</ht:news_item_url>
+      </ht:news_item>
+    </item>
+    <item>
+      <title>Pumpkin spice latte</title>
+      <ht:approx_traffic>200K+</ht:approx_traffic>
+      <ht:news_item>
+        <ht:news_item_title>PSL season is back</ht:news_item_title>
+        <ht:news_item_url>https://food.example.com/psl</ht:news_item_url>
+      </ht:news_item>
+    </item>
+    <item>
+      <title>Daylight Saving Time 2026!</title>
+      <ht:approx_traffic>50K+</ht:approx_traffic>
+    </item>
+  </channel>
+</rss>

@@ -1,0 +1,19 @@
+{# version: 1 #}
+{% extends "_layout" %}
+{% block system %}
+You classify consumer apps into exactly one industry for social posting-time priors.
+Pick the single best match from the provided list. Be decisive; confidence is 0-1.
+{% endblock %}
+{% block user %}
+Classify this app into one industry.
+
+<data name="project">
+{{ project }}
+</data>
+
+<data name="industries">
+{{ industries }}
+</data>
+
+Return the industry id (snake_case from the list), a confidence 0-1, and a one-sentence reason.
+{% endblock %}
