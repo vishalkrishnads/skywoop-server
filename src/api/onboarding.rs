@@ -711,6 +711,77 @@ pub async fn post_context(
     })))
 }
 
+#[derive(Debug, Serialize, ToSchema)]
+pub struct DemoOnboardingResponse {
+    pub project_id: Uuid,
+    pub onboarding_step: String,
+}
+
+#[utoipa::path(
+    post,
+    path = "/onboarding/demo",
+    responses(
+        (status = 200, description = "Existing or newly cloned Haserupt demo project", body = DemoOnboardingResponse),
+        (status = 409, description = "Demo template unavailable")
+    )
+)]
+pub async fn start_demo(
+    State(s): State<AppState>,
+    user: AuthUser,
+) -> AppResult<Json<DemoOnboardingResponse>> {
+    let template_id = s.cfg.demo_template_project_id.ok_or_else(|| {
+        AppError::Conflict("demo unavailable: DEMO_TEMPLATE_PROJECT_ID is not configured".into())
+    })?;
+
+    if let Some(existing) =
+        crate::domain::demo::existing_demo(&s.db, &user.id, template_id).await?
+    {
+        return Ok(Json(DemoOnboardingResponse {
+            project_id: existing,
+            onboarding_step: "complete".into(),
+        }));
+    }
+
+    let ig = crate::domain::demo::template_instagram(&s.db, template_id).await?;
+
+    let mut tx = s.db.begin().await?;
+    sqlx::query("select pg_advisory_xact_lock(hashtext($1))")
+        .bind(format!("onboarding:{}", user.id))
+        .execute(&mut *tx)
+        .await?;
+
+    // Another request may have cloned while we waited for the lock.
+    if let Some(existing) = sqlx::query_scalar::<_, Uuid>(
+        "select id from projects where owner_user_id = $1 and demo_of = $2 limit 1",
+    )
+    .bind(&user.id)
+    .bind(template_id)
+    .fetch_optional(&mut *tx)
+    .await?
+    {
+        tx.commit().await?;
+        return Ok(Json(DemoOnboardingResponse {
+            project_id: existing,
+            onboarding_step: "complete".into(),
+        }));
+    }
+
+    let project_id = crate::domain::demo::clone_template(
+        &mut tx,
+        s.blob.as_ref(),
+        template_id,
+        &user.id,
+        &ig,
+    )
+    .await?;
+    tx.commit().await?;
+
+    Ok(Json(DemoOnboardingResponse {
+        project_id,
+        onboarding_step: "complete".into(),
+    }))
+}
+
 #[utoipa::path(
     post,
     path = "/projects/{pid}/onboarding/complete",

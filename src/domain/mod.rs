@@ -1,6 +1,7 @@
 pub mod access;
 pub mod assets;
 pub mod audio_library;
+pub mod demo;
 pub mod experiment;
 pub mod knowledge;
 pub mod links;

@@ -25,6 +25,7 @@ fn api_routes() -> OpenApiRouter<AppState> {
         .routes(routes!(api::me::me))
         // Onboarding
         .routes(routes!(api::onboarding::start))
+        .routes(routes!(api::onboarding::start_demo))
         .routes(routes!(
             api::onboarding::get_details,
             api::onboarding::put_details

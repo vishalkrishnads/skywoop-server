@@ -69,6 +69,8 @@ pub struct Config {
     pub link_hash_secret_name: String,
     pub oauth_done_url: Url,
     pub listen_addr: String,
+    /// Project cloned for "Try with the Haserupt demo". None disables the endpoint.
+    pub demo_template_project_id: Option<uuid::Uuid>,
 }
 
 impl Config {
@@ -166,6 +168,14 @@ impl Config {
             link_hash_secret_name: env_or("LINK_HASH_SECRET_NAME", "link-hash-secret")?,
             oauth_done_url: env_url("OAUTH_DONE_URL", &oauth_done_default)?,
             listen_addr: env_or("LISTEN_ADDR", "0.0.0.0:8080")?,
+            demo_template_project_id: env::var("DEMO_TEMPLATE_PROJECT_ID")
+                .ok()
+                .filter(|s| !s.is_empty())
+                .map(|s| {
+                    s.parse::<uuid::Uuid>()
+                        .context("DEMO_TEMPLATE_PROJECT_ID must be a UUID")
+                })
+                .transpose()?,
         })
     }
 

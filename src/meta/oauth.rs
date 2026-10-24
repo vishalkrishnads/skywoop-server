@@ -564,7 +564,16 @@ pub async fn delete(
     .await?;
 
     if let Some((name,)) = secret {
-        let _ = s.secrets.delete(&name).await;
+        // Demo clones share the template's token secret; only delete when unused.
+        let still_used: bool = sqlx::query_scalar(
+            "select exists(select 1 from platform_connections where token_secret_name = $1)",
+        )
+        .bind(&name)
+        .fetch_one(&s.db)
+        .await?;
+        if !still_used {
+            let _ = s.secrets.delete(&name).await;
+        }
         return Ok(StatusCode::NO_CONTENT);
     }
     Err(AppError::NotFound)

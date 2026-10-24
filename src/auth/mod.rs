@@ -5,6 +5,7 @@ mod jwks;
 use axum::extract::{FromRequestParts, Request, State};
 use axum::http::header::AUTHORIZATION;
 use axum::http::request::Parts;
+use axum::http::HeaderMap;
 use axum::middleware::Next;
 use axum::response::Response;
 use chrono::{Duration, Utc};
@@ -73,12 +74,21 @@ impl FromRequestParts<AppState> for AuthUser {
     }
 }
 
-async fn authenticate(state: &AppState, headers: &axum::http::HeaderMap) -> AppResult<AuthUser> {
-    let auth = headers
+fn bearer_token(headers: &HeaderMap) -> Option<&str> {
+    headers
         .get(AUTHORIZATION)
         .and_then(|v| v.to_str().ok())
-        .ok_or(AppError::Unauthorized)?;
-    let token = auth.strip_prefix("Bearer ").ok_or(AppError::Unauthorized)?;
+        .and_then(|raw| raw.strip_prefix("Bearer ").filter(|t| !t.is_empty()))
+}
+
+async fn authenticate(state: &AppState, headers: &HeaderMap) -> AppResult<AuthUser> {
+    let Some(token) = bearer_token(headers) else {
+        tracing::warn!(
+            has_authorization = headers.contains_key(AUTHORIZATION),
+            "missing bearer token"
+        );
+        return Err(AppError::Unauthorized);
+    };
 
     match state.cfg.auth_mode {
         AuthMode::DevToken => {
@@ -88,6 +98,7 @@ async fn authenticate(state: &AppState, headers: &axum::http::HeaderMap) -> AppR
                     email: DEV_USER_EMAIL.into(),
                 })
             } else {
+                tracing::warn!("dev token mismatch");
                 Err(AppError::Unauthorized)
             }
         }
